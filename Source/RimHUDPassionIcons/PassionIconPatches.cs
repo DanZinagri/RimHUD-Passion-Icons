@@ -10,19 +10,24 @@ using RimHUD.Interface.Hud.Widgets;
 using RimWorld;
 using UnityEngine;
 using Verse;
-using VSE.Passions;
 
 namespace RimHUDPassionIcons
 {
+    // Returns the icon for a skill's passion (null = draw nothing) and the text indicator RimHUD
+    // put after the skill name for it (null if it's only RimHUD's own stars).
+    public delegate Texture2D PassionIconResolver(SkillRecord skill, out string indicator);
+
     // RimHUD draws passions as text after the skill name: its own stars, or VSE's indicatorString
     // once VSE's RimHUD patch runs. IMGUI labels can't hold images, so when a skill widget is built
-    // we cut that indicator off the label and remember the passion, then draw the passion's icon
-    // (VSE and Alpha Skills both supply one per PassionDef) just after the label text.
-    internal static class PassionIconPatches
+    // we cut that indicator off the label and remember the icon, then draw it just after the label
+    // text. Vanilla icons by default; the VSE integration assembly swaps in PassionDef icons.
+    public static class PassionIconPatches
     {
         private const string ColorClose = "</color>";
 
-        private static readonly ConditionalWeakTable<ValueWidget, PassionDef> Icons = new ConditionalWeakTable<ValueWidget, PassionDef>();
+        public static PassionIconResolver Resolver = VanillaIcon;
+
+        private static readonly ConditionalWeakTable<ValueWidget, Texture2D> Icons = new ConditionalWeakTable<ValueWidget, Texture2D>();
 
         private static readonly AccessTools.FieldRef<SkillValue, SkillRecord> SkillRef =
             AccessTools.FieldRefAccess<SkillValue, SkillRecord>("_skill");
@@ -31,7 +36,7 @@ namespace RimHUDPassionIcons
         private static readonly AccessTools.FieldRef<StandardWidget, TextStyle> StyleRef =
             AccessTools.FieldRefAccess<StandardWidget, TextStyle>("_textStyle");
 
-        public static void Patch(Harmony harmony)
+        internal static void Patch(Harmony harmony)
         {
             harmony.Patch(AccessTools.Method(typeof(ValueModel), nameof(ValueModel.Build)),
                 postfix: new HarmonyMethod(typeof(PassionIconPatches), nameof(Build_Postfix)));
@@ -46,24 +51,35 @@ namespace RimHUDPassionIcons
             SkillRecord skill = SkillRef(model);
             if (skill == null || skill.passion == Passion.None)
                 return;
-            PassionDef passion = PassionManager.PassionToDef(skill.passion);
-            if (passion == null || passion.iconPath.NullOrEmpty())
+            Texture2D icon = Resolver(skill, out string indicator);
+            if (icon == null)
                 return;
 
             string label = LabelRef(widget);
-            string stripped = StripIndicator(label, passion.Indicator)
+            string stripped = StripIndicator(label, indicator)
                 ?? StripIndicator(label, StarIndicator((int)skill.passion));
             if (stripped == null)
                 return;
 
             LabelRef(widget) = stripped;
             Icons.Remove(widget);
-            Icons.Add(widget, passion);
+            Icons.Add(widget, icon);
+        }
+
+        private static Texture2D VanillaIcon(SkillRecord skill, out string indicator)
+        {
+            indicator = null;
+            switch (skill.passion)
+            {
+                case Passion.Minor: return SkillUI.PassionMinorIcon;
+                case Passion.Major: return SkillUI.PassionMajorIcon;
+                default: return null;
+            }
         }
 
         private static void Draw_Postfix(ValueWidget __instance, Rect rect)
         {
-            if (!Icons.TryGetValue(__instance, out PassionDef passion))
+            if (!Icons.TryGetValue(__instance, out Texture2D icon))
                 return;
             string label = LabelRef(__instance);
             if (label == null)
@@ -78,7 +94,7 @@ namespace RimHUDPassionIcons
 
             Color color = GUI.color;
             GUI.color = Color.white;
-            GUI.DrawTexture(iconRect, passion.Icon, ScaleMode.ScaleToFit);
+            GUI.DrawTexture(iconRect, icon, ScaleMode.ScaleToFit);
             GUI.color = color;
         }
 

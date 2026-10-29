@@ -1,0 +1,51 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- VSE integration, loaded via LoadFolders only when vanillaexpanded.skills is active.
+       net48 -> 1.6/Mods/VSE/Assemblies, net10.0 -> 1.7/Mods/VSE/Assemblies.
+       VSE only ships a 1.6 (net48) DLL; both targets reference it. -->
+  <PropertyGroup>
+    <TargetFrameworks>net48;net10.0</TargetFrameworks>
+    <AssemblyName>RimHUDPassionIcons.VSE</AssemblyName>
+    <RootNamespace>RimHUDPassionIcons.VanillaSkills</RootNamespace>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\$(TargetFramework)\</IntermediateOutputPath>
+    <GenerateDependencyFile>false</GenerateDependencyFile>
+    <DebugType>none</DebugType>
+    <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <RimWorld16Ref>C:\Users\DanZinagri\Documents\RimWorldModding\RimWorld-1.6-Ref</RimWorld16Ref>
+    <RimWorld17Root>E:\SteamLibrary\steamapps\common\RimWorld</RimWorld17Root>
+    <UnityFacades>C:\Users\DanZinagri\Documents\RimWorldModding\RimWorld-1.7-UnityFacades</UnityFacades>
+    <Workshop>E:\SteamLibrary\steamapps\workshop\content\294100</Workshop>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net48'">
+    <OutputPath>..\..\1.6\Mods\VSE\Assemblies\</OutputPath>
+    <FrameworkPathOverride>$(RimWorld16Ref)</FrameworkPathOverride>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net10.0'">
+    <OutputPath>..\..\1.7\Mods\VSE\Assemblies\</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RimHUDPassionIcons\RimHUDPassionIcons.csproj"><Private>false</Private></ProjectReference>
+    <Reference Include="VSE"><HintPath>$(Workshop)\3400246558\1.6\Assemblies\VSE.dll</HintPath><Private>false</Private></Reference>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
+    <Reference Include="Assembly-CSharp"><HintPath>$(RimWorld16Ref)\Assembly-CSharp.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.CoreModule"><HintPath>$(RimWorld16Ref)\UnityEngine.CoreModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="netstandard"><HintPath>$(RimWorld16Ref)\netstandard.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="0Harmony"><HintPath>$(Workshop)\2009463077\1.6\Assemblies\0Harmony.dll</HintPath><Private>false</Private></Reference>
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+    <Reference Include="Assembly-CSharp"><HintPath>$(RimWorld17Root)\Assembly-CSharp.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityStubs"><HintPath>$(RimWorld17Root)\UnityStubs.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="0Harmony"><HintPath>$(Workshop)\2009463077\1.7\Assemblies\0Harmony.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.CoreModule"><HintPath>$(UnityFacades)\UnityEngine.CoreModule.dll</HintPath><Private>false</Private></Reference>
+  </ItemGroup>
+
+</Project>

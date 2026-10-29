@@ -7,7 +7,7 @@ using Verse;
 using VSE;
 using VSE.Passions;
 
-namespace RimHUDPassionIcons
+namespace RimHUDPassionIcons.VanillaSkills
 {
     // VSE's PrepareModeratelyPatches.Do patches Lakuna.PrepareModerately.Filter.Part.PawnFilterPart
     // .GetRandomOfEnum, which Prepare Moderately removed long ago. AccessTools returns null, Harmony
@@ -111,7 +111,7 @@ namespace RimHUDPassionIcons
         private static void DevLog(string text)
         {
             if (Prefs.DevMode)
-                Log.Message("[RimHUD Passion Icons] " + text);
+                Log.Message("[RimHUD Passion Icons - VSE] " + text);
         }
     }
 }

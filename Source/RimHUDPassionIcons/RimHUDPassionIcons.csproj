@@ -3,7 +3,7 @@
   <!-- One project, two builds:
        net48   -> 1.6/Assemblies, compiled against the 1.6 reference assemblies (Krafs copy).
        net10.0 -> 1.7/Assemblies, compiled against the 1.7 game root (Waylith / UnityStubs).
-       VSE and RimHUD only ship 1.6 (net48) DLLs; both targets reference those. -->
+       RimHUD only ships a 1.6 (net48) DLL; both targets reference it. VSE code lives in RimHUDPassionIcons.VSE. -->
   <PropertyGroup>
     <TargetFrameworks>net48;net10.0</TargetFrameworks>
     <AssemblyName>RimHUDPassionIcons</AssemblyName>
@@ -34,7 +34,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Reference Include="VSE"><HintPath>$(Workshop)\3400246558\1.6\Assemblies\VSE.dll</HintPath><Private>false</Private></Reference>
     <Reference Include="RimHUD"><HintPath>$(Workshop)\1508850027\Assemblies\RimHUD.dll</HintPath><Private>false</Private></Reference>
   </ItemGroup>
 
@@ -50,7 +49,7 @@
     <Reference Include="Assembly-CSharp"><HintPath>$(RimWorld17Root)\Assembly-CSharp.dll</HintPath><Private>false</Private></Reference>
     <Reference Include="UnityStubs"><HintPath>$(RimWorld17Root)\UnityStubs.dll</HintPath><Private>false</Private></Reference>
     <Reference Include="0Harmony"><HintPath>$(Workshop)\2009463077\1.7\Assemblies\0Harmony.dll</HintPath><Private>false</Private></Reference>
-    <!-- Compile-time forwarders so VSE/RimHUD signatures with Unity types resolve to UnityStubs. -->
+    <!-- Compile-time forwarders so RimHUD signatures with Unity types resolve to UnityStubs. -->
     <Reference Include="UnityEngine.CoreModule"><HintPath>$(UnityFacades)\UnityEngine.CoreModule.dll</HintPath><Private>false</Private></Reference>
     <Reference Include="UnityEngine.IMGUIModule"><HintPath>$(UnityFacades)\UnityEngine.IMGUIModule.dll</HintPath><Private>false</Private></Reference>
     <Reference Include="UnityEngine.TextRenderingModule"><HintPath>$(UnityFacades)\UnityEngine.TextRenderingModule.dll</HintPath><Private>false</Private></Reference>

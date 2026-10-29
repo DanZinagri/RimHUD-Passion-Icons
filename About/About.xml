@@ -7,17 +7,12 @@
 		<li>1.6</li>
 		<li>1.7</li>
 	</supportedVersions>
-	<description>RimHUD shows VSE and Alpha Skills passion icons instead of stars.</description>
+	<description>RimHUD shows passion icons instead of stars.</description>
 	<modDependencies>
 		<li>
 			<packageId>brrainz.harmony</packageId>
 			<displayName>Harmony</displayName>
 			<steamWorkshopUrl>steam://url/CommunityFilePage/2009463077</steamWorkshopUrl>
-		</li>
-		<li>
-			<packageId>vanillaexpanded.skills</packageId>
-			<displayName>Vanilla Skills Expanded</displayName>
-			<steamWorkshopUrl>steam://url/CommunityFilePage/3400246558</steamWorkshopUrl>
 		</li>
 		<li>
 			<packageId>Jaxe.RimHUD</packageId>
@@ -29,7 +24,7 @@
 		<li>brrainz.harmony</li>
 		<li>Jaxe.RimHUD</li>
 	</loadAfter>
-	<!-- Our Mod constructor has to run before VSE's so the Prepare Moderately fix is in place. -->
+	<!-- With VSE active, our VSE integration's Mod constructor has to run before VSE's so the Prepare Moderately fix is in place. -->
 	<loadBefore>
 		<li>vanillaexpanded.skills</li>
 	</loadBefore>

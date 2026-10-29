@@ -9,14 +9,8 @@ namespace RimHUDPassionIcons
         public RimHUDPassionIconsMod(ModContentPack content) : base(content)
         {
             var harmony = new Harmony("DanZinagri.RimHUDPassionIcons");
-
-            // Must be in place before VSE's own Mod constructor calls ModCompat.Init
-            // (About.xml loads us before VSE). Fallback() covers a load order where it isn't.
-            PrepareModeratelyFix.Install(harmony);
-
             LongEventHandler.ExecuteWhenFinished(() =>
             {
-                PrepareModeratelyFix.Fallback(harmony);
                 if (ModLister.HasActiveModWithName("RimHUD"))
                     PatchRimHUD(harmony);
             });
