@@ -27,7 +27,13 @@ namespace RimHUDPassionIcons
 
         public static PassionIconResolver Resolver = VanillaIcon;
 
-        private static readonly ConditionalWeakTable<ValueWidget, Texture2D> Icons = new ConditionalWeakTable<ValueWidget, Texture2D>();
+        private sealed class IconEntry
+        {
+            public Texture2D Icon;
+            public bool Disabled;
+        }
+
+        private static readonly ConditionalWeakTable<ValueWidget, IconEntry> Icons = new ConditionalWeakTable<ValueWidget, IconEntry>();
 
         private static readonly AccessTools.FieldRef<SkillValue, SkillRecord> SkillRef =
             AccessTools.FieldRefAccess<SkillValue, SkillRecord>("_skill");
@@ -63,7 +69,7 @@ namespace RimHUDPassionIcons
 
             LabelRef(widget) = stripped;
             Icons.Remove(widget);
-            Icons.Add(widget, icon);
+            Icons.Add(widget, new IconEntry { Icon = icon, Disabled = skill.TotallyDisabled });
         }
 
         private static Texture2D VanillaIcon(SkillRecord skill, out string indicator)
@@ -79,7 +85,7 @@ namespace RimHUDPassionIcons
 
         private static void Draw_Postfix(ValueWidget __instance, Rect rect)
         {
-            if (!Icons.TryGetValue(__instance, out Texture2D icon))
+            if (!Icons.TryGetValue(__instance, out IconEntry entry))
                 return;
             string label = LabelRef(__instance);
             if (label == null)
@@ -94,7 +100,12 @@ namespace RimHUDPassionIcons
 
             Color color = GUI.color;
             GUI.color = Color.white;
-            GUI.DrawTexture(iconRect, icon, ScaleMode.ScaleToFit);
+            // Disabled skills: vanilla's grayscale UI material (what disabled gizmos and float-menu
+            // icons use), so the icon goes gray like RimHUD's grayed-out label. Same API on 1.6 and 1.7.
+            if (entry.Disabled)
+                GenUI.DrawTextureWithMaterial(iconRect, entry.Icon, TexUI.GrayscaleGUI);
+            else
+                GUI.DrawTexture(iconRect, entry.Icon, ScaleMode.ScaleToFit);
             GUI.color = color;
         }
 
