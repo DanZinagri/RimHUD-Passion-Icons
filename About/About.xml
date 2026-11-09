@@ -18,11 +18,15 @@
 			<packageId>Jaxe.RimHUD</packageId>
 			<displayName>RimHUD</displayName>
 			<steamWorkshopUrl>steam://url/CommunityFilePage/1508850027</steamWorkshopUrl>
+			<alternativePackageIds>
+				<li>RuoXue.RimHUDFix</li>
+			</alternativePackageIds>
 		</li>
 	</modDependencies>
 	<loadAfter>
 		<li>brrainz.harmony</li>
 		<li>Jaxe.RimHUD</li>
+		<li>RuoXue.RimHUDFix</li>
 	</loadAfter>
 	<!-- With VSE active, our VSE integration's Mod constructor has to run before VSE's so the Prepare Moderately fix is in place. -->
 	<loadBefore>

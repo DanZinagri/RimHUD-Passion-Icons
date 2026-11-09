@@ -17,7 +17,12 @@ namespace RimHUDPassionIcons.VanillaSkills
             // Must be in place before VSE's own Mod constructor calls ModCompat.Init
             // (About.xml loads us before VSE). Fallback() covers a load order where it isn't.
             PrepareModeratelyFix.Install(harmony);
-            LongEventHandler.ExecuteWhenFinished(() => PrepareModeratelyFix.Fallback(harmony));
+            RimHUDFixCompat.Install(harmony);
+            LongEventHandler.ExecuteWhenFinished(() =>
+            {
+                PrepareModeratelyFix.Fallback(harmony);
+                RimHUDFixCompat.Late();
+            });
 
             PassionIconPatches.Resolver = PassionDefIcon;
         }

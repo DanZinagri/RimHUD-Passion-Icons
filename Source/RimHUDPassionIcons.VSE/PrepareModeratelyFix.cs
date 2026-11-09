@@ -51,6 +51,8 @@ namespace RimHUDPassionIcons.VanillaSkills
             if (ModCompat.StrangerDanger && ModCompat.SD_passion == null)
                 ModCompat.SD_passion = AccessTools.TypeByName("Stranger_Danger.BioSkillsPatch")?.GetMethod("passion_sd");
 
+            if (RimHUDPassionIconsMod.RimHUDActive)
+                ModCompat.RimHUD = true; // also counts RimHUD FIX, see RimHUDFixCompat
             if (ModCompat.RimHUD)
             {
                 try { RimHUDPatches.Do(SkillsMod.Harm); }
